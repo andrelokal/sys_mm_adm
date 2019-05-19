@@ -1,0 +1,50 @@
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+        <h3 class="page-title">
+        Cadastro de Empresa <small></small>
+        </h3>
+        <ul class="page-breadcrumb breadcrumb">
+            <div class="btn-group">
+                <button type="button" class="btn green btn-sm" ajax='/form' target='#page-content' data-controller='company' callback='OpenFormController' >
+                    <span>
+                        Adicionar
+                    </span>
+                    <i class="fa fa-plus"></i>
+                </button>
+
+                <button type="button" class="btn purple btn-sm"  >
+                    <span>
+                        Exportar
+                    </span>
+                    <i class="fa fa-download"></i>
+                </button>
+            </div>
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="index.html">
+                    Home
+                </a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">
+                    Cadastro
+                </a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">
+                    Empresas
+                </a>
+            </li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+    </div>
+</div>
+<!-- /.row -->
+
+<x controller='company' target='#datagrid' callback='Grid'></x>
+@include grid.html
+

@@ -1,0 +1,88 @@
+<backpoint />
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+        <h3 class="page-title">
+        {page_title} <small></small>
+        </h3>
+        <ul class="page-breadcrumb breadcrumb">
+            <div class="btn-group">
+                <button type="button" class="btn green btn-sm" ajax='/form' target='#page-content' data-controller='{page_class}' callback='OpenFormController' >
+                    <span>
+                        Adicionar
+                    </span>
+                    <i class="fa fa-plus"></i>
+                </button>
+
+                <button type="button" class="btn purple btn-sm"  >
+                    <span>
+                        Exportar
+                    </span>
+                    <i class="fa fa-download"></i>
+                </button>
+            </div>
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="index.html">
+                    Home
+                </a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">
+                    Cadastro
+                </a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#">
+                    Contratos
+                </a>
+            </li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+    </div>
+</div>
+<!-- /.row -->
+
+<x controller='{page_class}' target='#datagrid' callback='Grid'></x>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div>
+        <div class="col-sm-12">
+            <form class="form-inline" role="form" id='form-find'>
+                <!-- <div class="form-group">
+                    <input type="text" class="form-control" name="search" id='search' placeholder="Palavra chave..." autocomplete="off">
+                </div> -->
+                <div class="btn-group">
+                    <button type="submit" class="btn blue"><i class="fa fa-search"></i></button>
+                    <button type="button" class="btn btn-default clear"> Limpar</button>
+                </div>
+            </form>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered" id='datagrid'>
+                    
+                </table>
+            </div>
+            <ul class="pagination" id='pagination'>
+                
+            </ul> 
+        </div>
+
+    </div>  
+
+
+  </div>
+
+</div>
+
+
+

@@ -1,0 +1,549 @@
+<style>
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+		padding: 5px;
+		font-size: 12px;
+	}
+</style>
+
+			
+			<!-- BEGIN PAGE HEADER-->
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+					Monitor <small>monitoramento de vendas / delivery</small>
+					</h3>
+				</div>
+			</div>		
+
+			<div class="row">
+				<div class="col-md-4 col-sm-4">
+					<div class="portlet box blue  ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-tint"></i>Itens
+							</div>
+						</div>
+						<div class="portlet-body">
+							<table class='table table-striped table-hover' id='monitor_item'></table>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-3">
+					<div class="portlet box light-grey  ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-desktop"></i>Monitor de Pedidos
+							</div>
+						</div>
+						<div class="portlet-body">
+							<table class='table table-striped table-hover' id='venda-status'></table>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-5 col-sm-5">
+					<div class="portlet box yellow  ">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-motorcycle"></i>Monitor de Delivery
+							</div>
+						</div>
+						<div class="portlet-body">
+							<table class='table table-striped table-hover' id='delivery'></table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+<script>
+
+	var phpjs ;
+	$(function(){
+
+
+		phpjs = new $PHP( 'home' );
+		phpjs.loaded = function(){
+			Monitor_item( phpjs )
+		}
+
+		/*
+		var home = new $PHP( 'home' );
+		home.loaded = function(){
+
+			home.call('sums', [] ,function(){
+				if( home.data ) loadDataHome(home.data)
+			})
+
+		}
+
+		function loadDataHome( data ){
+
+			$('#today .number').html( data.hoje )
+			$('#month .number').html( data.mes )
+			$('#card .number').html( data.cartao )
+			$('#card_limit .number').html( data.cartao_limite )
+
+			$('#ranking').html('')
+
+			if( data.range.length ){
+				for( var i in data.range ){
+
+					html = 	"<h4> "+ data.range[i].title +" ( "+ data.range[i].total +" / "+ data.range[i].parcel_limit +" ) </h4>"+
+							"<div class='progress progress-striped'>"+
+							"<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width: "+ data.range[i].range +"%'>"+
+							"<span class='sr-only'>"+
+							"40% Complete (success)"+
+							"</span></div></div>";
+
+					$('#ranking').append( html )
+				}
+			}
+
+			$('#last_releases').html('')
+
+			if( data.last.length ){
+				$('#last_releases').html("<table class='table table-hover table-striped table-bordered' >"+
+											"<thead>"+
+												"<th>Dia</th>"+
+												"<th>Compra</th>"+
+												"<th>Valor</th>"+
+											"</thead>"+
+										 "</table>");
+				for( var i in data.last ){
+
+					html = 	"<tr>"+
+								"<td>"+ data.last[i].dia +"</td>"+
+								"<td>"+ data.last[i].title +"</td>"+
+								"<td>"+ data.last[i].buy_value +"</td>"+
+							"</tr>";
+
+					$('#last_releases table').append( html );
+				}
+			}
+
+			
+
+		}*/
+	})
+
+	function Monitor_item( phpjs ){
+		phpjs.call('monitor_item',[], function( ret ){
+
+			var columns = phpjs.data.grid.columns;
+			var data = phpjs.data.grid.data;
+
+			$('#monitor_item').myBT({
+				columns : columns,
+				data :  data,
+				render : {
+					/*action : function( value, row ){
+						
+						var drop =  '<div class="task-config-btn btn-group">'+
+										'<a class="btn btn-xs default" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">'+
+											'Ação'+
+										'</a>'+
+										'<ul class="dropdown-menu pull-right">'+
+											'<li>'+
+												'<a href="#">'+
+													'<i class="fa fa-check"></i> Complete'+
+												'</a>'+
+											'</li>'+
+											'<li>'+
+												'<a href="#">'+
+													'<i class="fa fa-pencil"></i> Edit'+
+												'</a>'+
+											'</li>'+
+											'<li>'+
+												'<a href="#">'+
+													'<i class="fa fa-trash-o"></i> Cancel'+
+												'</a>'+
+											'</li>'+
+										'</ul>'+
+									'</div>';
+
+						return 	drop;
+					},*/
+					status : function( value, row ){
+
+						var lis = [];
+
+						switch( value ){
+							case 'A':
+								lis.push(	{
+										title : "Concluído",
+										icon: "fa-check",
+										value: "C"
+
+									}
+								);
+								value = "<i class='fa fa-refresh tooltips' data-placement='top' data-original-title='Em adamento' ></i>"
+								break;	
+						}						
+
+						lis.push(	{
+										title : "Cancelar Item",
+										icon: "fa-trash-o",
+										value: "X"
+
+									}
+								);
+
+
+						var drop =  $( '<div class="task-config-btn btn-group">'+
+											
+											'<a class="btn btn-xs blue" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">'+
+												value+
+											'</a>'+
+										'</div>');
+
+						var ul = $('<ul class="dropdown-menu pull-right itens">');
+						for( var i in lis ){
+							ul.append( '<li id="'+ row.item_id +'">'+
+											'<a href="#" value="'+ lis[i].value +'" >'+
+												'<i class="fa '+ lis[i].icon +'"></i> '+lis[i].title+
+											'</a>'+
+										'</li>' );
+						}
+
+						drop.append(ul);
+
+						return 	drop;
+
+					}
+				},
+				no_result : "Nenhuma venda registrada..."
+			})			
+
+			Monitor_pedido( phpjs );
+
+			$('.itens li a').unbind('click').click(function(){
+				var tr = $(this).parents('tr:eq(0)');
+				ChangeStatusItem( tr.attr('id'), $(this).attr('value') )
+				return false;
+			})
+
+		})
+	}
+
+	function Monitor_pedido( phpjs ){
+		phpjs.call('monitor',[], function( ret ){
+
+			var columns = phpjs.data.grid.columns;
+			var data = phpjs.data.grid.data;
+
+			columns.push( { "data" 	: "action",
+							"width" : "5",
+							"title"	: "Ação",
+							"show"	: true } );
+
+			$('#venda-status').myBT({
+				columns : columns,
+				data :  data,
+				render : {
+					st : function( value ){
+
+						var progess = 	'<div class="progress">'+
+										'<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="'+value+'" aria-valuemin="0" aria-valuemax="100" style="width: '+value+'%">'+
+										'<span class="sr-only">'+
+										//'40% Complete (success)'+
+										'</span>'+
+										'</div>'+
+										'</div>';
+
+						return progess;
+					},
+					action : function( value, row ){
+						
+						var lis = [];
+						lis.push(	{
+										title : "Fechar Pedido",
+										icon: "fa-check",
+										value: "F"
+
+									},
+									{
+										title : "Cancelar Pedido",
+										icon: "fa-trash-o",
+										value: "C"
+
+									}
+								);
+
+						value = '<i class="fa fa-check tooltips" data-placement="top" data-original-title="Pronto!" ></i>';
+						
+						var drop =  $( '<div class="task-config-btn btn-group">'+
+											
+											'<a class="btn btn-xs purple" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">'+
+												value+
+											'</a>'+
+										'</div>');
+
+						var ul = $('<ul class="dropdown-menu pull-right pedidos">');
+						for( var i in lis ){
+							ul.append( '<li id="'+ row.item_id +'">'+
+											'<a href="#" value="'+ lis[i].value +'" >'+
+												'<i class="fa '+ lis[i].icon +'"></i> '+lis[i].title+
+											'</a>'+
+										'</li>' );
+						}
+
+						drop.append(ul);
+
+						return 	drop;
+
+
+						
+					}
+				},
+				no_result : "Nenhuma venda registrada..."
+			})
+
+			Monitor_devlivery( phpjs );
+
+			$('.pedidos li a').unbind('click').click(function(){
+				var tr = $(this).parents('tr:eq(0)');
+				ChangeStatusVenda( tr.attr('id'), $(this).attr('value') )
+				return false;
+			})
+
+		})
+	}
+
+	function Monitor_devlivery( phpjs ){
+		phpjs.call('monitor_delivery',[], function( ret ){
+
+			var columns = phpjs.data.grid.columns;
+			var data = phpjs.data.grid.data;
+
+			$('#delivery').myBT({
+				columns : columns,
+				data :  data,
+				render : {
+					status : function( value, row){
+						var lis = [];
+						
+						switch( value ){
+							case 'A':
+
+								lis.push(	{
+												title : "Definir Entregador",
+												icon: "fa-motorcycle define",
+												value: "T",
+												action: "define"
+											},
+											{
+												title : "Entregue",
+												icon: "fa-check",
+												value: "C",
+												action: "status"
+											}
+								);
+
+								value = "<i class='fa fa-clock-o tooltips' data-placement='top' data-original-title='Aguardando Entregador' ></i>"
+								break;
+							case 'T':
+								lis.push(	{
+												title : "Entregue",
+												icon: "fa-check",
+												value: "C",
+												action: "status"
+											}
+								);
+								value = "<i class='fa fa-refresh tooltips' data-placement='top' data-original-title='Em transporte' ></i>"
+								break;	
+						}
+
+						lis.push(	{
+										title : "Cancelar Entregra",
+										icon: "fa-trash-o",
+										value: "X",
+										action: "status"
+									}
+								);
+
+
+						var drop =  $( '<div class="task-config-btn btn-group">'+											
+											'<a class="btn btn-xs yellow" href="#" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">'+
+												value+
+											'</a>'+
+										'</div>');
+
+						var ul = $('<ul class="dropdown-menu pull-right entregas" id="'+ row.id +'">');
+						for( var i in lis ){
+							ul.append( '<li >'+
+											'<a href="#" value="'+ lis[i].value +'" action='+ lis[i].action +' >'+
+												'<i class="fa '+ lis[i].icon +'"></i> '+lis[i].title+
+											'</a>'+
+										'</li>' );
+						}
+
+						drop.append(ul);
+
+						return 	drop;
+
+					},
+					forma : function( value ){
+
+						switch( value ){
+							case 'D':
+								value = "<i class='fa fa-money tooltips' data-placement='top' data-original-title='Dinheiro' ></i>"
+								break;
+							case 'M':
+								value = "<i class='fa fa-credit-card tooltips' data-placement='top' data-original-title='Cartão' ></i>"
+								break;	
+						}
+						
+						return value;
+					},
+					action : function( value, row ){
+						
+						if( row.st == '100' ){
+							return '<a href="#" class="btn default btn-xs default"><i class="fa fa-check"></i></a>';
+						} else {
+							//return '<a href="#" class="btn default btn-xs default"><i class="fa fa-motorcycle"></i> Entregar</a>';
+						}
+
+						
+					}
+				},
+				no_result : "Nenhuma venda registrada..."
+			})
+
+			$('.entregas li a').unbind('click').click(function(){
+
+				var ul = $(this).parents('ul:eq(0)');
+				//ChangeStatusEntrega( tr.attr('id'), $(this).attr('value') )
+				switch( $(this).attr('action') ){
+					case 'define':
+						EscolherEntrega( ul.attr('id') )
+						break;	
+					case 'status':
+						ChangeStatusEntrega( ul.attr('id'), $(this).val() )
+						break;
+				}
+				
+				return false;
+			})
+
+			$('.tooltips').tooltip();
+
+		})
+	}
+
+	function ChangeStatusItem( id, status ){
+
+		var sale = new $PHP( 'sale' );
+		sale.loaded = function(){
+			
+			sale.call( 'change_status', [ id, status ], function( ret ){
+
+				if( ret.message ){
+					Message( ret ) 
+				}
+
+				if ( ret.success  ){
+					Monitor_item( phpjs );
+				} 
+			})
+
+		}
+
+	}
+
+	function ChangeStatusVenda( id, status ){
+
+		var sale = new $PHP( 'sale' );
+		sale.loaded = function(){
+			
+			sale.call( 'change_status_venda', [ id, status ], function( ret ){
+
+				if( ret.message ){
+					Message( ret ) 
+				}
+
+				if ( ret.success  ){
+					Monitor_item( phpjs );
+				} 
+			})
+
+		}
+
+	}
+
+	function ChangeStatusEntrega( id, status ){
+
+		var sale = new $PHP( 'sale' );
+		sale.loaded = function(){
+			
+			sale.call( 'change_status_entrega', [ id, status ], function( ret ){
+
+				if( ret.message ){
+					Message( ret ) 
+				}
+
+				if ( ret.success  ){
+					Monitor_item( phpjs );
+				} 
+			})
+
+		}
+
+	}
+
+	function EscolherEntrega( id ){
+
+		$.ajax({
+			url : "/form-simple",
+			success : function( data ){
+				var buttons = [];
+					buttons.push( { label : "Gravar",
+									class : "blue",
+									event : function(){
+										$('#modal form').submit()
+										//$('#modal').modal('toggle')
+									}},
+								  { label : "Fechar Janela",
+									class : "grey",
+									event : function(){
+										$('#modal').modal('toggle')
+									}}	);
+
+				showModal( 	"Escolher Entregador",
+							data, 
+							buttons, 
+							function(){
+
+								var ctl = new $PHP('delivery_ctl');
+								ctl.loaded = function(){
+									OpenFormController( ctl, id, null, 
+									function( data ){
+										if( data.success ){
+											$('#modal').modal('toggle');
+											ChangeStatusEntrega( id, 'T' )
+											Monitor_item( phpjs )
+										}
+									},  
+									function(){
+										
+									})
+								}
+							}, 
+							function(){
+								
+							});
+			}
+		})	
+
+	}
+
+	function AfterSubmitEntrega(){
+		alert('oi')
+	}
+
+	function CancelEntrega( id ){
+		alert( id )
+	}
+
+</script>

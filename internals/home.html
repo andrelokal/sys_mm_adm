@@ -1,0 +1,274 @@
+<style>
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+		padding: 5px;
+		font-size: 12px;
+	}
+
+	#chart{
+		height: 200px;
+	}
+</style>
+
+			
+			<!-- BEGIN PAGE HEADER-->
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+					<h3 class="page-title">
+					{title} <small>{system_descrition}</small>
+					</h3>
+					<ul class="page-breadcrumb breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="/">
+								Home
+							</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="#">
+								Dashboard
+							</a>
+						</li>
+						<li class="pull-right">
+							<div id="dashboard-report-range" class="dashboard-date-range tooltips" data-placement="top" data-original-title="Change dashboard date range">
+								<i class="fa fa-calendar"></i>
+								<span>
+								</span>
+								<i class="fa fa-angle-down"></i>
+							</div>
+						</li>
+					</ul>
+					<!-- END PAGE TITLE & BREADCRUMB-->
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">	
+					<div class="dashboard-stat blue">
+						<div class="visual">
+							<i class="fa fa-shopping-cart"></i>
+						</div>
+						<div class="details">
+							<div class="number">
+								 1349
+							</div>
+							<div class="desc">
+								 Vendas Hoje
+							</div>
+						</div>
+						<a class="more" href="#">
+							 View more <i class="m-icon-swapright m-icon-white"></i>
+						</a>
+					</div>
+					<div class="dashboard-stat green">
+						<div class="visual">
+							<i class="fa fa-motorcycle"></i>
+						</div>
+						<div class="details">
+							<div class="number">
+								 549
+							</div>
+							<div class="desc">
+								 Entregas Hoje
+							</div>
+						</div>
+						<a class="more" href="#">
+							 View more <i class="m-icon-swapright m-icon-white"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-md-6 ">
+					<div class="portlet box red">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-reorder"></i>Gráfico de vendas
+							</div>
+							<div class="tools">
+								<a href="javascript:;" class="collapse">
+								</a>
+								<a href="#portlet-config" data-toggle="modal" class="config">
+								</a>
+								<a href="javascript:;" class="reload">
+								</a>
+								<a href="javascript:;" class="remove">
+								</a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="chart" class="chart">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			
+			</div>
+
+
+<script>
+
+	var phpjs ;
+	$(function(){
+
+		phpjs = new $PHP( 'home' );
+		phpjs.loaded = function(){
+			chart()
+		}
+
+		/*
+		var home = new $PHP( 'home' );
+		home.loaded = function(){
+
+			home.call('sums', [] ,function(){
+				if( home.data ) loadDataHome(home.data)
+			})
+
+		}
+
+		function loadDataHome( data ){
+
+			$('#today .number').html( data.hoje )
+			$('#month .number').html( data.mes )
+			$('#card .number').html( data.cartao )
+			$('#card_limit .number').html( data.cartao_limite )
+
+			$('#ranking').html('')
+
+			if( data.range.length ){
+				for( var i in data.range ){
+
+					html = 	"<h4> "+ data.range[i].title +" ( "+ data.range[i].total +" / "+ data.range[i].parcel_limit +" ) </h4>"+
+							"<div class='progress progress-striped'>"+
+							"<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width: "+ data.range[i].range +"%'>"+
+							"<span class='sr-only'>"+
+							"40% Complete (success)"+
+							"</span></div></div>";
+
+					$('#ranking').append( html )
+				}
+			}
+
+			$('#last_releases').html('')
+
+			if( data.last.length ){
+				$('#last_releases').html("<table class='table table-hover table-striped table-bordered' >"+
+											"<thead>"+
+												"<th>Dia</th>"+
+												"<th>Compra</th>"+
+												"<th>Valor</th>"+
+											"</thead>"+
+										 "</table>");
+				for( var i in data.last ){
+
+					html = 	"<tr>"+
+								"<td>"+ data.last[i].dia +"</td>"+
+								"<td>"+ data.last[i].title +"</td>"+
+								"<td>"+ data.last[i].buy_value +"</td>"+
+							"</tr>";
+
+					$('#last_releases table').append( html );
+				}
+			}
+
+			
+
+		}*/
+	})
+
+	function chart(){
+		var visitors = [
+                ['01/2013', 500],
+                ['02/2013', 1500],
+                ['03/2013', 2600],
+                ['04/2013', 1200],
+                ['05/2013', 560],
+                ['06/2013', 2000],
+                ['07/2013', 2350],
+                ['08/2013', 1500],
+                ['09/2013', 4700],
+                ['10/2013', 1300],
+            ];
+
+		var plot_statistics = $.plot($("#chart"), 
+
+                    [
+                    {
+                        data:visitors,
+                        lines: {
+                            fill: 0.6,
+                            lineWidth: 0,
+                        },
+                        color: ['#f89f9f']
+                    },
+                    {
+                        data: visitors,
+                        points: {
+                            show: true,
+                            fill: true,
+                            radius: 5,
+                            fillColor: "#f89f9f",
+                            lineWidth: 3
+                        },
+                        color: '#fff',
+                        shadowSize: 0
+                    },
+                    ], 
+
+                    {
+                    
+                    xaxis: {
+                        tickLength: 0,
+                        tickDecimals: 0,                        
+                        mode: "categories",
+                        min: 2,
+                        font: {
+                            lineHeight: 14,
+                            style: "normal",
+                            variant: "small-caps",
+                            color: "#6F7B8A"
+                        }
+                    },
+                    yaxis: {
+                        ticks: 5,
+                        tickDecimals: 0,
+                        tickColor: "#eee",
+                        font: {
+                            lineHeight: 14,
+                            style: "normal",
+                            variant: "small-caps",
+                            color: "#6F7B8A"
+                        }
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#eee",
+                        borderColor: "#eee",
+                        borderWidth: 1
+                    }
+                });
+
+                var previousPoint = null;
+                $("#chart").bind("plothover", function (event, pos, item) {
+                    $("#x").text(pos.x.toFixed(2));
+                    $("#y").text(pos.y.toFixed(2));
+                    if (item) {
+                        if (previousPoint != item.dataIndex) {
+                            previousPoint = item.dataIndex;
+
+                            $("#tooltip").remove();
+                            var x = item.datapoint[0].toFixed(2),
+                                y = item.datapoint[1].toFixed(2);
+
+                            showChartTooltip(item.pageX, item.pageY, item.datapoint[0], item.datapoint[1] + ' visits');
+                        }
+                    } else {
+                        $("#tooltip").remove();
+                        previousPoint = null;
+                    }
+                });
+	}
+
+</script>
